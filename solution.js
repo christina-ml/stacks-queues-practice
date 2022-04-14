@@ -19,97 +19,82 @@ class Queue {
 
   // methods
   // Count size of queue
-  /*
-    1. Node is set to the first item
-    2. While there are nodes...
-    3. the size is already being tracked, so size increases by 1, each time in the while loop.
-    4. the pointer for the first item is moved to node.next
-    5. Returning the size, which has increased one time every time there has been a node..
-  */
+//  traverse our queue, until we hit the end.
   count(){
-    let node = this.first;
-    while (node){
-      this.size++;
-      node = node.next;
+    let temp = this.first;
+    let counter = 0;
+    while (temp){
+      counter++;
+      temp = temp.next;
     }
-    return this.size;
+    return counter;
   }
   // Can remove from queue using dequeue method
-  /*
-    1. Guard clause - If there is no first, the queue is empty.
-    2. If the first and last are the same, there's just one node.
-    3. Set the one node to null.
-    4. Let node be the first.
-    5. Move the pointer to first to be the next.
-    6. Return the node data.
-  */
+//  [1, 2, 3, 4]
+  // guard clause - can't remove from an empty queue
+  // what if there's only one element in the array?
+  // nothing gets passed in, just remove - from beginning.
   dequeue(){
-    if (!this.first){
-      throw new Error("Can't remove from empty queue");
+    if (this.first === null){
+      return null;
     }
+    let temp = this.first;
+    
     if (this.first === this.last){
+      this.first = null;
       this.last = null;
+    } else {
+      // shift first down to the next one
+      this.first = this.first.next;
     }
-    let node = this.first;
-    this.first = this.first.next;
-    return node.data;
+    return temp.data;
   }
   // Can add to queue using enqueue method
-  /*
-    1. Create a new instance of a Node with the data passed in.
-    2. If there is no `first item`...
-    3. Set the `first item` and `last item` to the `new node`.
-    4. else, set the pointer of the last item to be the `new node`
-    5. the last item is set to the new node.
-  */
-  enqueue(data){
-    let newNode = new Node(data);
-    if (!this.first){
+    // we add it to the end, and remove it from the beginning.
+    //  [1,2,3,  4]
+  enqueue(val){
+    // create a newNode with this value
+    let newNode = new Node(val);
+    // ask is it empty?
+    if (this.first === null){
       this.first = newNode;
       this.last = newNode;
     } else {
-      this.last.next = newNode;
+      // establish association so 3 is linking to 4
+      // we assign the last to be 4
+      this.last.next = newNode
       this.last = newNode;
     }
   }
   // findMax data value
+  // going to traverse;
   findMax(){
-    let node = this.first;
-    let max = this.first.data;
-    while (node){
-      if (max < node.data){
-        max = node.data;
+    let temp = this.first;
+    let max = 0; // or set to this.first.data // or if there were negative numbers, you could set it to -Infinity
+
+    while (temp){
+      // if temp.data is bigger, make it our new max;
+      if (temp.data > max){
+        max = temp.data;
       }
-      node = node.next;
+      temp = temp.next;
     }
     return max;
   }
 
   // getLast node
-  /*
-    1. Let node equal the first item
-    2. While there is a node... the pointer for node points to node.next
-    3. if the next node is null, that is the last one in the list. So return the node.
-  */
   getLast(){
-    let node = this.first;
-    while (node){
-      node = node.next;
-      if (node.next === null){
-        return node;
-      }
-    }
+    return this.last;
   }
 
   // isEmpty check if list is empty
   isEmpty(){
     return this.first === null;
-    // if (this.first === null){
-    //   return null;
-    // }
   }
 
   // peek the first node
+  // whichever end you want to remove from, you look at.
+  // return the node at the first position
   peek(){
     return this.first;
   }
@@ -225,7 +210,7 @@ class Stack {
         return -1;
       }
     });
-    console.log(stackArr);
+    // console.log(stackArr);
 
     // create a new stack to push them back, using push. // erasing the top, and then pushing them back into the sorted order // empty the stack
     this.top = null;
@@ -234,7 +219,7 @@ class Stack {
     for (let val of stackArr){
       this.push(val);
     }
-    console.log(inspect(this.top, true, 9, true))
+    // console.log(inspect(this.top, true, 9, true))
   }
 }
 
