@@ -120,109 +120,67 @@ class Stack {
     this.top = top;
   }
   // Methods
-  /*
-    1. create a new node
-    2. the next new node points to the top of the stack.
-    3. the top of the stack is now the new node.
-  */
+// create a new node
+// set next property to the top of the stack;
+//  replace the top with our new node
   push(value){
     const newNode = new Node(value);
     newNode.next = this.top;
     this.top = newNode;
   }
-  /*
-    1. Set a counter to zero, to start size at zero.
-    2. node is at the top.
-    3. while there is a node, increase the count by 1.
-    4. node points to the next node. continue while loop.
-    5. Return count, which has increased once every time there was a node.
-   */
+
+  // What's the Big O notation of this? Linear - O(n)
   size(){
-    let count = 0;
-    let node = this.top;
-    while (node){
-      count++;
-      node = node.next;
+    let temp = this.top;
+    let counter = 0;
+    // keep incrementing by 1, and traverse the entire stack until there's nothing left.
+    while (temp){
+      // increment counter every time it finds a node.
+      // keep shifting pointer down one in the stack, until it hits the end of the stack.
+      counter++;
+      temp = temp.next;
     }
-    return count;
+    return counter;
   }
-  /*
-    1. Guard clause - if the top is null, there's nothing in the list.
-    2. Return null, because the list is empty.
-    3. set node to the top.
-    4. While there is a node in the list...
-    5. This.top is reassigned to the pointer for the next node.
-    6. Because the pointer for top shifts to the next node, the original top is abandoned. Returning the node.
-  */
+
   pop(){
+    // what if it's an empty stack?
+    // guard clause - if this.top is empty, return null
     if (this.top === null){
       return null;
     }
-    let node = this.top;
-    if (node){
-      this.top = node.next;
-    }
-    return node;
+    // keep track of current top, and shift the current top down one
+    let temp = this.top;
+    this.top = temp.next;
+    return temp;
   }
   // check if list is empty
-  /*
-    1. If the top is null, there is nothing in the list.
-    2. Return true if there's nothing.
-    3. Else, return false if there is a value.
-  */
   isEmpty(){
-    if (this.top === null){
-      return true;
-    } else {
-      return false;
-    }
+    // this.top has a value? Not empty
+    // this.top is null? Is empty
+    return this.top === null;
   }
   // findMin data value
-  /*
-    1. set node to be the top.
-    2. while there is a node,
-    3. Check to see if the node is smaller than the next node.
-    4. If the node is smaller, set the head to be the smaller node.
-
-  */
-  findMin(data){
-    /*
-        (2) (3) (1) (5) (4)
-
-      1. take the top and the next.
-       -- While there is a node --
-      2. if the first (2) is smaller than next (3),
-      3. keep the first (2) and throw away next (3) by moving pointer of `next` to the `next.next` one.
-      4. top = (2) and next is (1).
-            (3) was removed
-
-        (2) --> (1) (5) (4)
-
-      4. if the first (2) is bigger than next (1),
-      5. keep the next (1) and throw away the first (2), by moving pointer to `next` (like pop)
-            (2) was removed
-      
-             --> (1) (5) (4)
-      */
-     let node = this.top;
-    while (node){
-      if (this.top < node.next){
-        node.next = node.next.next;
-      } else if (this.top > node.next){
-        this.top = node.next;
+  findMin(){
+      // if this.isEmpty(), return null. If it's an empty stack, return null.
+      if (this.isEmpty()){
+        return null;
       }
-      return node.data;
-    }
+      // set the first minimum to this.top.data // min is a number, not a node.
+      let temp = this.top;
+      let min = temp.data;
+      
+      // we're traversing
+      while(temp){
+        if (temp.data < min){
+          min = temp.data;
+        }
+        temp = temp.next;
+      }
+      return min;
   }
   // peek top node
-  /*
-    1. Guard clause - if the top is null, the list is empty. Throw an error.
-    2. See the value of the top node's data by returning it
-  */
   peek(){
-    if (this.top === null){
-      throw new Error("Error: The stack is empty ");
-    }
     return this.top;
   }
   // sort - sort the stack into ascending order. CHALLENGE only use stacks to achieve this (no arrays or objects etc.)
@@ -244,19 +202,39 @@ class Stack {
     Set this node to be the `first node` in the `newStack`.
 
   */
-  sort(){
-    let node = this.top;
-    let min = this.top
-    // while there are nodes
-    while(node){
-      if (node.data < min.data){
-        min = node;
-      }
-      node = node.next;
+  //convert this data to an array
+  convertToArr(){
+    let temp = this.top;
+    let arr = [];
+    // this will traverse our entire stack
+    while (temp){
+      // insert at the beginning of the array
+      arr.push(temp.data.toLowerCase())
+      temp = temp.next;
     }
-    min.next = this.top;
-    this.top = min;
-    return min;
+    return arr;
+  }
+  // create a sort method where we're going to use this `convertToArr`
+  sort(){
+    // now we have an array of all the values, and going to sort it.
+    let stackArr = this.convertToArr();
+    stackArr.sort((a,b)=>{
+      if (a < b){
+        return 1
+      } else {
+        return -1;
+      }
+    });
+    console.log(stackArr);
+
+    // create a new stack to push them back, using push. // erasing the top, and then pushing them back into the sorted order // empty the stack
+    this.top = null;
+
+    // reverse the array, to start at the end of the array and count downward.
+    for (let val of stackArr){
+      this.push(val);
+    }
+    console.log(inspect(this.top, true, 9, true))
   }
 }
 
