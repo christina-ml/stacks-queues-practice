@@ -43,16 +43,27 @@ class Queue {
     if (this.first === this.last){
       this.first = null;
       this.last = null;
-    } else {
-      // shift first down to the next one
-      this.first = this.first.next;
     }
+
+    // shift first down to the next one
+    this.first = this.first.next;
+    this.size--;
+
+    // if our data is the max, we have to re-evaluate our max
+    if (temp.data === this.max){
+      this.max = this.findMax();
+    }
+  
     return temp.data;
   }
   // Can add to queue using enqueue method
     // we add it to the end, and remove it from the beginning.
     //  [1,2,3,  4]
   enqueue(val){
+    if (val > this.max){
+      this.max = val;
+    }
+
     // create a newNode with this value
     let newNode = new Node(val);
     // ask is it empty?
@@ -222,14 +233,6 @@ class Stack {
     // console.log(inspect(this.top, true, 9, true))
   }
 }
-
-// let myStack = new Stack();
-// myStack.push("Oh my...");
-// myStack.push("Bears");
-// myStack.push("Tigers");
-// myStack.push("Lions");
-// myStack.sort();
-// console.log("end:", myStack);
 
 module.exports = {
   Node,
